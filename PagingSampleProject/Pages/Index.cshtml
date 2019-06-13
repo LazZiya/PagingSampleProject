@@ -1,0 +1,65 @@
+﻿@page
+@model IndexModel
+@using  System.Globalization
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<form method="get" class="form-inline">
+    <input asp-for="Q" class="form-control" />
+
+    @*
+        select-enum is a tag helper that ships with LazZiya.TagHelper
+        for more details see: http://www.ziyad.info/en/articles/28-Select_Enum_TagHelper_for_ASP_NET_Core
+    *@
+    <select-enum enum-type="typeof(CultureTypes)" 
+                 selected-value="(int)Model.CT"
+                 name="ct"
+                 class="form-control" >
+    </select-enum>
+    <button type="submit" class="btn btn-primary">Search</button>
+
+    @*
+        add hidden field for page size parameter,
+        so if we can keep search filters if page size is changed
+    *@
+    <input type="hidden" asp-for="S" />
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>LCID</th>
+            <th>English Name</th>
+            <th>Native Name</th>
+            <th>Culture types</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model.CulturesList)
+        {
+            <tr>
+                <td>@c.LCID</td>
+                <td>@c.EnglishName</td>
+                <td>@c.NativeName</td>
+                <td>@c.CultureTypes</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@*
+    for more details about PaginGTagHelper visit:
+    http://www.ziyad.info/en/articles/21-Paging_TagHelper_for_ASP_NET_Core
+*@
+<paging page-no="Model.P"
+        page-size="Model.S"
+        total-records="Model.TotalRecords"
+        query-string-value="@(Request.QueryString.Value)"
+        show-prev-next="true"
+        show-total-pages="true"
+        show-total-records="true"
+        show-page-size-nav="true"
+        show-first-numbered-page="true"
+        show-last-numbered-page="true">
+</paging>
