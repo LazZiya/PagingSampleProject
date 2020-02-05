@@ -1,0 +1,37 @@
+﻿@model PagingSampleProject.Pages.AjaxPagingModel
+
+<table class="table table-striped">
+
+    <thead>
+        <tr>
+            <th>LCID</th>
+            <th>English Name</th>
+            <th>Native Name</th>
+            <th>Culture types</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model.CulturesList)
+        {
+            <tr>
+                <td>@c.LCID</td>
+                <td>@c.EnglishName</td>
+                <td>@c.NativeName</td>
+                <td>@c.CultureTypes</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4">
+                <paging page-no="Model.P"
+                        page-size="Model.S"
+                        total-records="Model.TotalRecords"
+                        ajax="true"
+                        ajax-url="?handler=AjaxPaging"
+                        ajax-update="#items"
+                        ajax-loading="#loading"></paging>
+            </td>
+        </tr>
+    </tfoot>
+</table>

@@ -1,5 +1,5 @@
 ﻿@page
-@model IndexModel
+@model AjaxPagingModel
 @using  System.Globalization
 @{
     ViewData["Title"] = "Home page";
@@ -26,33 +26,19 @@
     <input type="hidden" asp-for="S" />
 </form>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>LCID</th>
-            <th>English Name</th>
-            <th>Native Name</th>
-            <th>Culture types</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var c in Model.CulturesList)
-        {
-            <tr>
-                <td>@c.LCID</td>
-                <td>@c.EnglishName</td>
-                <td>@c.NativeName</td>
-                <td>@c.CultureTypes</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div id="items">
+    <partial name="ItemsPartial" />
+</div>
 
-@*
-    for more details about PaginGTagHelper visit:
-    http://www.ziyad.info/en/articles/21-Paging_TagHelper_for_ASP_NET_Core
-*@
-<paging page-no="Model.P"
-         page-size="Model.S"
-         total-records="Model.TotalRecords">
-</paging>
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/jquery-ajax-unobtrusive@3.2.6/dist/jquery.unobtrusive-ajax.min.js"></script>
+    <script>
+        $(function () {
+
+        });
+
+        failed = function (xhr) {
+            alert(`Status: {xhr.status}, Status Text: {xhr.statusText}`);
+        };
+    </script>
+}
