@@ -45,17 +45,17 @@ namespace PagingSampleProject.Pages
         }
 
         //return list of CultureItem
-        public IList<CultureItem> CulturesList { get; set; }
+        public ICollection<CultureItem> CulturesList { get; set; }
 
         public void OnGet()
         {
-            RunData();
+            (TotalRecords, CulturesList) = GetData();
         }
 
         public IActionResult OnGetAjaxPaging()
         {
 
-            RunData();
+            (TotalRecords, CulturesList) = GetData();
 
             return new PartialViewResult()
             {
@@ -64,7 +64,7 @@ namespace PagingSampleProject.Pages
             };
         }
 
-        private void RunData()
+        private (int totalRecods, ICollection<CultureItem> items) GetData()
         {
             var query = Cultures.Select(x => new CultureItem
             {
@@ -93,9 +93,9 @@ namespace PagingSampleProject.Pages
             }
 
             //count records that returns after the search
-            TotalRecords = query.Count();
+            var t = query.Count();
 
-            CulturesList = query
+            var i = query
 
                 //make sure to order items before paging
                 .OrderBy(x => x.EnglishName)
@@ -106,6 +106,8 @@ namespace PagingSampleProject.Pages
                 //take only 10 (page size) items
                 .Take(S)
                 .ToList();
+
+            return (t, i);
         }
     }
 }

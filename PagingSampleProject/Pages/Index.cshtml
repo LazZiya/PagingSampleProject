@@ -1,10 +1,16 @@
 ﻿@page
 @model IndexModel
-@using  System.Globalization
+@using System.Globalization
+@using LazZiya.TagHelpers.Utilities
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Standard Paging";
 }
 
+<h1>Standard Paging</h1>
+<paging page-no="Model.P"
+        page-size="Model.S"
+        total-records="Model.TotalRecords">
+</paging>
 <form method="get" class="form-inline">
     <input asp-for="Q" class="form-control" />
 
@@ -12,11 +18,14 @@
         select-enum is a tag helper that ships with LazZiya.TagHelper
         for more details see: http://www.ziyad.info/en/articles/28-Select_Enum_TagHelper_for_ASP_NET_Core
     *@
-    <select-enum enum-type="typeof(CultureTypes)"
-                 selected-value="(int)Model.CT"
-                 name="ct"
-                 class="form-control">
-    </select-enum>
+    
+    <select asp-for="CT" class="form-control">
+        @foreach(var ct in Enum.GetNames(typeof(CultureTypes)).OrderBy(x => x))
+        {
+            <option>@ct</option>
+        }
+    </select>
+
     <button type="submit" class="btn btn-primary">Search</button>
 
     @*
@@ -48,11 +57,46 @@
     </tbody>
 </table>
 
+<paging page-no="Model.P"
+        page-size="Model.S"
+        total-records="Model.TotalRecords"
+        show-page-size-nav="false"
+        show-total-pages="false"
+        show-total-records="false">
+</paging>
+
+<paging page-no="Model.P"
+        page-size="Model.S"
+        total-records="Model.TotalRecords"
+        show-page-size-nav="false"
+        show-total-pages="false"
+        show-total-records="false"
+        show-first-last="false"
+        show-prev-next="false"
+        show-gap="false">
+</paging>
+
+<paging page-no="Model.P"
+        page-size="Model.S"
+        total-records="Model.TotalRecords"
+        show-page-size-nav="false"
+        show-total-pages="false"
+        show-total-records="false"
+        show-first-last="false"
+        max-displayed-pages="1">
+</paging>
+
+<paging page-no="Model.P"
+        page-size="Model.S"
+        total-records="Model.TotalRecords"
+        show-page-size-nav="false"
+        show-total-pages="false"
+        show-total-records="false"
+        show-first-last="false"
+        max-displayed-pages="0">
+</paging>
+
 @*
     for more details about PaginGTagHelper visit:
     http://www.ziyad.info/en/articles/21-Paging_TagHelper_for_ASP_NET_Core
 *@
-<paging page-no="Model.P"
-         page-size="Model.S"
-         total-records="Model.TotalRecords">
-</paging>

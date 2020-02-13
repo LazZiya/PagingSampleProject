@@ -2,9 +2,9 @@
 @model AjaxPagingModel
 @using  System.Globalization
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Ajax Paging";
 }
-
+<h1>Ajax Paging</h1>
 <form method="get" class="form-inline">
     <input asp-for="Q" class="form-control" />
 
@@ -12,11 +12,12 @@
         select-enum is a tag helper that ships with LazZiya.TagHelper
         for more details see: http://www.ziyad.info/en/articles/28-Select_Enum_TagHelper_for_ASP_NET_Core
     *@
-    <select-enum enum-type="typeof(CultureTypes)"
-                 selected-value="(int)Model.CT"
-                 name="ct"
-                 class="form-control">
-    </select-enum>
+    <select asp-for="CT" class="form-control">
+        @foreach (var ct in Enum.GetNames(typeof(CultureTypes)).OrderBy(x => x))
+        {
+            <option>@ct</option>
+        }
+    </select>
     <button type="submit" class="btn btn-primary">Search</button>
 
     @*

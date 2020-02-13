@@ -1,5 +1,5 @@
 ﻿@model PagingSampleProject.Pages.AjaxPagingModel
-
+@using LazZiya.TagHelpers.Utilities
 <table class="table table-striped">
 
     <thead>
@@ -30,7 +30,8 @@
                         ajax="true"
                         ajax-url="?handler=AjaxPaging"
                         ajax-update="#items"
-                        ajax-loading="#loading"></paging>
+                        ajax-loading="#loading">
+                </paging>
             </td>
         </tr>
     </tfoot>
