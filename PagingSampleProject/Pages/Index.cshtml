@@ -7,10 +7,6 @@
 }
 
 <h1>Standard Paging</h1>
-<paging page-no="Model.P"
-        page-size="Model.S"
-        total-records="Model.TotalRecords">
-</paging>
 <form method="get" class="form-inline">
     <input asp-for="Q" class="form-control" />
 
@@ -57,14 +53,43 @@
     </tbody>
 </table>
 
+<span>Full (default)</span>
+<paging page-no="Model.P"
+        page-size="Model.S"
+        total-records="Model.TotalRecords">
+</paging>
+
+<span>Roman number format</span>
 <paging page-no="Model.P"
         page-size="Model.S"
         total-records="Model.TotalRecords"
         show-page-size-nav="false"
         show-total-pages="false"
-        show-total-records="false">
+        show-total-records="false"
+        number-format="@NumberFormats.Roman">
 </paging>
 
+<span>Hindi number format</span>
+<paging page-no="Model.P"
+        page-size="Model.S"
+        total-records="Model.TotalRecords"
+        show-page-size-nav="false"
+        show-total-pages="false"
+        show-total-records="false"
+        number-format="@NumberFormats.Hindi">
+</paging>
+
+<span>Hex number format</span>
+<paging page-no="Model.P"
+        page-size="Model.S"
+        total-records="Model.TotalRecords"
+        show-page-size-nav="false"
+        show-total-pages="false"
+        show-total-records="false"
+        number-format="@NumberFormats.Hex">
+</paging>
+
+<span>Only numbers</span>
 <paging page-no="Model.P"
         page-size="Model.S"
         total-records="Model.TotalRecords"
@@ -76,6 +101,7 @@
         show-gap="false">
 </paging>
 
+<span>Only one page</span>
 <paging page-no="Model.P"
         page-size="Model.S"
         total-records="Model.TotalRecords"
@@ -86,6 +112,7 @@
         max-displayed-pages="1">
 </paging>
 
+<span>Only prev/next navigation buttons</span>
 <paging page-no="Model.P"
         page-size="Model.S"
         total-records="Model.TotalRecords"
