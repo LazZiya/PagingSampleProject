@@ -56,7 +56,9 @@
 <span>Full (default)</span>
 <paging page-no="Model.P"
         page-size="Model.S"
-        total-records="Model.TotalRecords">
+        total-records="Model.TotalRecords"
+        text-page-size="{0} records per page"
+        class-page-size-div="col-3">
 </paging>
 
 <span>Roman number format</span>
@@ -127,3 +129,12 @@
     for more details about PaginGTagHelper visit:
     http://www.ziyad.info/en/articles/21-Paging_TagHelper_for_ASP_NET_Core
 *@
+
+@section Scripts {
+
+<script>
+    $(function () {
+        $("#pagingDropDownMenuBtn").text('@Model.S');
+    })
+</script>
+}

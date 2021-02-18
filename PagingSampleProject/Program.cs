@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using PagingSampleProject.Data;
 
 namespace PagingSampleProject
 {
@@ -14,7 +9,22 @@ namespace PagingSampleProject
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            // Get the IWebHost which will host this web application
+            var host = CreateWebHostBuilder(args).Build();
+            
+            // Find the service layer within our scope
+            using(var scope = host.Services.CreateScope())
+            {
+                // Get the instance of ApplicationContext in our services layer
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<ApplicationDbContext>();
+
+                // Call DataGenerator to create sample data
+                DataGenerator.Initialize(services);
+            }
+            
+            // Continue to run the application
+            host.Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

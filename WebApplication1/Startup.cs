@@ -1,12 +1,15 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using PagingSampleProject.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace PagingSampleProject
+namespace WebApplication1
 {
     public class Startup
     {
@@ -20,10 +23,6 @@ namespace PagingSampleProject
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // In memory database steps can be found here
-            // https://exceptionnotfound.net/ef-core-inmemory-asp-net-core-store-database/
-            services.AddDbContext<ApplicationDbContext>(ops => ops.UseInMemoryDatabase(databaseName: "PagingSampleDb"));
-
             services.AddRazorPages();
         }
 
