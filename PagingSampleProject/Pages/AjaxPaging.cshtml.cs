@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using PagingSampleProject.Data;
 
 namespace PagingSampleProject.Pages
@@ -39,15 +42,14 @@ namespace PagingSampleProject.Pages
         // List of CultureItem to be returned
         public ICollection<CultureItem> CulturesList { get; set; }
 
-        public void OnGet()
+        public async Task OnGetAsync()
         {
-            (TotalRecords, CulturesList) = GetData();
+            (TotalRecords, CulturesList) = await GetDataAsync();
         }
 
-        public IActionResult OnGetAjaxPaging()
+        public async Task<IActionResult> OnGetAjaxPagingAsync()
         {
-
-            (TotalRecords, CulturesList) = GetData();
+            (TotalRecords, CulturesList) = await GetDataAsync();
 
             return new PartialViewResult()
             {
@@ -56,50 +58,37 @@ namespace PagingSampleProject.Pages
             };
         }
 
-        private (int totalRecods, ICollection<CultureItem> items) GetData()
+        private async Task<(int totalRecods, ICollection<CultureItem> items)> GetDataAsync()
         {
-            var query = Context.Set<CultureItem>().Select(x => new CultureItem
-            {
-                LCID = x.LCID,
-                EnglishName = x.EnglishName,
-                NativeName = x.NativeName,
-                CultureTypes = x.CultureTypes
-            });
+            var searchExp = new List<Expression<Func<CultureItem, bool>>>() { };
 
-            //if the search text is not empty, then apply where clause
+            // If the search text is not empty, then apply where clause
             if (!string.IsNullOrWhiteSpace(Q))
             {
-                var _keyWords = Q.Split(new[] { ' ', ',', ':' }, StringSplitOptions.RemoveEmptyEntries).Distinct();
-
-                //null check is not required in our case for this sample, 
-                //added just for demonstration in case the search will be done in nullable database fields
-                query = query.Where(x => _keyWords.Any(kw =>
-                    (x.EnglishName != null && x.EnglishName.Contains(kw, StringComparison.OrdinalIgnoreCase)) ||
-                    (x.NativeName != null && x.NativeName.Contains(kw, StringComparison.OrdinalIgnoreCase))));
+                searchExp.Add(x => x.EnglishName.Contains(Q) || x.NativeName.Contains(Q) || x.Name.Contains(Q));
             }
 
             //if search filter for culture type is specified, then add where clause
             if (CT != CultureTypes.AllCultures)
             {
-                query = query.Where(x => x.CultureTypes.HasFlag(CT));
+                searchExp.Add(x => x.CultureTypes.HasFlag(CT));
             }
 
             //count records that returns after the search
-            var t = query.Count();
+            var total = await Context.Set<CultureItem>()
+                                        .AsNoTracking()
+                                        .WhereList(searchExp)
+                                        .CountAsync();
 
-            var i = query
+            var items = await Context.Set<CultureItem>()
+                                        .AsNoTracking()
+                                        .WhereList(searchExp)
+                                        .OrderBy(x => x.EnglishName)
+                                        .Skip((P - 1) * S)
+                                        .Take(S)
+                                        .ToListAsync();
 
-                //make sure to order items before paging
-                .OrderBy(x => x.EnglishName)
-
-                //skip items before current page
-                .Skip((P - 1) * S)
-
-                //take only 10 (page size) items
-                .Take(S)
-                .ToList();
-
-            return (t, i);
+            return (total, items);
         }
     }
 }
