@@ -1,0 +1,147 @@
+﻿@model CulturesPagingModel
+@using PagingSampleProjectMVC.Data
+@using System.Globalization
+@using LazZiya.TagHelpers.Utilities
+@{
+    ViewData["Title"] = "Standard Paging";
+}
+
+<h1>Standard Paging</h1>
+<form method="get" class="form-inline">
+    <input name="q" value="@(Context.Request.Query["q"])" class="form-control" />
+
+    @*
+        select-enum is a tag helper that ships with LazZiya.TagHelper
+        for more details see: http://www.ziyad.info/en/articles/28-Select_Enum_TagHelper_for_ASP_NET_Core
+    *@
+
+    <select name="ct" class="form-control">
+        @foreach (var ct in Enum.GetNames(typeof(CultureTypes)).OrderBy(x => x))
+        {
+            if (ct == Context.Request.Query["ct"])
+            {
+                <option selected>@ct</option>
+            }
+            else
+            {
+                <option>@ct</option>
+            }
+        }
+    </select>
+
+    <button type="submit" class="btn btn-primary">Search</button>
+
+    @*
+        add hidden field for page size parameter,
+        so if we can keep search filters if page size is changed
+    *@
+    <input type="hidden" asp-for="S" />
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>LCID</th>
+            <th>English Name</th>
+            <th>Native Name</th>
+            <th>Culture types</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model.CulturesList)
+        {
+            <tr>
+                <td>@c.LCID</td>
+                <td>@c.EnglishName</td>
+                <td>@c.NativeName</td>
+                <td>@c.CultureTypes</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<span>Full (default)</span>
+<paging page-no="Model.P"
+        page-size="Model.S"
+        total-records="Model.TotalRecords"
+        text-page-size="{0} records per page"
+        class-page-size-div="col-3">
+</paging>
+
+<span>Roman number format</span>
+<paging page-no="Model.P"
+        page-size="Model.S"
+        total-records="Model.TotalRecords"
+        show-page-size-nav="false"
+        show-total-pages="false"
+        show-total-records="false"
+        number-format="@NumberFormats.Roman">
+</paging>
+
+<span>Hindi number format</span>
+<paging page-no="Model.P"
+        page-size="Model.S"
+        total-records="Model.TotalRecords"
+        show-page-size-nav="false"
+        show-total-pages="false"
+        show-total-records="false"
+        number-format="@NumberFormats.Hindi">
+</paging>
+
+<span>Hex number format</span>
+<paging page-no="Model.P"
+        page-size="Model.S"
+        total-records="Model.TotalRecords"
+        show-page-size-nav="false"
+        show-total-pages="false"
+        show-total-records="false"
+        number-format="@NumberFormats.Hex">
+</paging>
+
+<span>Only numbers</span>
+<paging page-no="Model.P"
+        page-size="Model.S"
+        total-records="Model.TotalRecords"
+        show-page-size-nav="false"
+        show-total-pages="false"
+        show-total-records="false"
+        show-first-last="false"
+        show-prev-next="false"
+        show-gap="false">
+</paging>
+
+<span>Only one page</span>
+<paging page-no="Model.P"
+        page-size="Model.S"
+        total-records="Model.TotalRecords"
+        show-page-size-nav="false"
+        show-total-pages="false"
+        show-total-records="false"
+        show-first-last="false"
+        max-displayed-pages="1">
+</paging>
+
+<span>Only prev/next navigation buttons</span>
+<paging page-no="Model.P"
+        page-size="Model.S"
+        total-records="Model.TotalRecords"
+        show-page-size-nav="false"
+        show-total-pages="false"
+        show-total-records="false"
+        show-first-last="false"
+        max-displayed-pages="0">
+</paging>
+
+@*
+    for more details about PaginGTagHelper visit:
+    http://www.ziyad.info/en/articles/21-Paging_TagHelper_for_ASP_NET_Core
+*@
+
+@section Scripts {
+
+    <script>
+    $(function () {
+        $("#pagingDropDownMenuBtn").text('@Model.S');
+    })
+    </script>
+}
